@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -28,16 +30,17 @@ public class XmlUtils {
 		Document document = reader.read(file);
 		return document;
 	}
-	
+
 	/**
 	 * 查询单个节点
+	 * 
 	 * @param parent
 	 * @param condition
 	 * @return
 	 */
 	public static Element query(Element parent, String condition) {
 		Element ele = null;
-		if(null != parent) {
+		if (null != parent) {
 			Node node = parent.selectSingleNode(condition);
 			if (node instanceof Element) {
 				ele = (Element) node;
@@ -45,39 +48,63 @@ public class XmlUtils {
 		}
 		return ele;
 	}
-	
+
 	/**
 	 * 
 	 * @param parent
 	 * @param condition
 	 * @return
 	 */
-	public static List<Element> queryList(Element parent,String condition) {
-		List<Element> list  = null;
-		if(null != parent) {
+	public static List<Element> queryList(Element parent, String condition) {
+		List<Element> list = null;
+		if (null != parent) {
 			List<?> nodeList = parent.selectNodes(condition);
-			list= new ArrayList<Element>(nodeList.size());
-			for(Object node : nodeList) {
-				if(node instanceof Element) {
-					list.add((Element)node);
+			list = new ArrayList<Element>(nodeList.size());
+			for (Object node : nodeList) {
+				if (node instanceof Element) {
+					list.add((Element) node);
 				}
 			}
 		}
 		return list;
 	}
-	
-	public void addElement() {
-		
+
+	public void addElement(Element parent, String eleName, Map<String, String> params) {
+		if (null == parent || null == eleName) {
+			return;
+		}
+		Element element = parent.addElement(eleName);
+		if (null != params && params.size() > 0) {
+			for (String key : params.keySet()) {
+				element.addAttribute(key, params.get(key));
+			}
+		}
 	}
-	
-	public void editElement() {
-		
+
+	public void editElement(Element ele, Map<String, String> params) {
+		if (null == ele) {
+			return;
+		}
+		if (null != params && params.size() > 0) {
+			for (String key : params.keySet()) {
+				Attribute attr;
+				String attrVal;
+				if (null != (attr = ele.attribute(key)) && attr.getValue() != (attrVal = params.get(key))) {
+					attr.setValue(attrVal);
+				}
+			}
+		}
 	}
-	
-	public void removeElement() {
-		
+
+	public void removeElement(Element parent, String condition) {
+		List<?> eles = parent.selectNodes(condition);
+		if (null != eles && eles.size() > 0) {
+			for (Object o : eles) {
+				eles.remove(o);
+			}
+		}
 	}
-	
+
 	/**
 	 * 
 	 * @param in
@@ -104,7 +131,5 @@ public class XmlUtils {
 		XMLWriter writer = new XMLWriter(new FileWriter(file));
 		writer.write(document);
 		writer.close();
-
 	}
-
 }
