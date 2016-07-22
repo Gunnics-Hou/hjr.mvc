@@ -2,6 +2,7 @@ package com.hjr.dao.xmlImpl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 import org.dom4j.Document;
@@ -22,7 +23,8 @@ public class BaseDAO {
 	static {
 		try {
 			Properties proper = PropertiesUtils
-					.load(BaseDAO.class.getResourceAsStream("/com/hjr/dao/xmlImpl/app.properties"));
+					.load(BaseDAO.class
+							.getResourceAsStream("/com/hjr/dao/xmlImpl/impl.properties"));
 			String filePath = proper.getProperty("dataSource");
 			dataSource = new File(filePath);
 			doc = XmlUtils.load(dataSource);
@@ -32,7 +34,7 @@ public class BaseDAO {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public Document getDocument() {
 		return doc;
 	}
@@ -44,13 +46,20 @@ public class BaseDAO {
 	public void save() throws IOException {
 		XmlUtils.save(dataSource, doc);
 	}
-	
+
 	public Element query(String condition) {
 		Element ele = null;
-		if(null != condition) {
-			ele = XmlUtils.query(getRoot(),condition);
+		if (null != condition) {
+			ele = XmlUtils.query(getRoot(), condition);
 		}
 		return ele;
 	}
 
+	public List<Element> queryList(String condition) {
+		List<Element> list = null;
+		if (null != condition) {
+			list = XmlUtils.queryList(getRoot(), condition);
+		}
+		return list;
+	}
 }
