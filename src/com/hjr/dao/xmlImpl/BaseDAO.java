@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
+import org.dom4j.Element;
 
 import com.hjr.utils.PropertiesUtils;
 import com.hjr.utils.XmlUtils;
@@ -31,13 +32,25 @@ public class BaseDAO {
 			e.printStackTrace();
 		}
 	}
-
-	public Document load() {
+	
+	public Document getDocument() {
 		return doc;
+	}
+
+	public Element getRoot() {
+		return doc.getRootElement();
 	}
 
 	public void save() throws IOException {
 		XmlUtils.save(dataSource, doc);
+	}
+	
+	public Element query(String condition) {
+		Element ele = null;
+		if(null != condition) {
+			ele = XmlUtils.query(getRoot(),condition);
+		}
+		return ele;
 	}
 
 }

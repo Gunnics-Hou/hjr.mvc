@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
 	<user id="001" name="admin" passworld="admin" birthday="" address="" email="11@qq.com" />
+	<user id="002" name="samen" passworld="123456" birthday="" address="" email="22@qq.com" />
+	<user id="003" name="tom" passworld="120" birthday="" address="" email="33@qq.com" />
+	<user id="004" name="sara" passworld="3322" birthday="" address="" email="44@qq.com" />
+	<user id="005" name="gunnics" passworld="w3c000" birthday="" address="" email="55@qq.com" />
 </data>
