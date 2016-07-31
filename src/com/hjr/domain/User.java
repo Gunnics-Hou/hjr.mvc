@@ -3,6 +3,8 @@ package com.hjr.domain;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.hjr.exception.MsgException;
+
 public class User implements Serializable {
 
 	/**
@@ -30,6 +32,18 @@ public class User implements Serializable {
 		this.birthday = birthday;
 		this.address = address;
 		this.email = email;
+	}
+	
+	public void validate() throws MsgException {
+		if(null == this.id || "".equals(this.id)) {
+			throw new MsgException("用户id不能为空");
+		}
+		if(null == this.name || "".equals(this.name.trim())) {
+			throw new MsgException("用户名不能为空");
+		}
+		if(null == this.password || "".equals(this.password.trim())) {
+			throw new MsgException("用户密码不能为空");
+		}
 	}
 
 	@Override

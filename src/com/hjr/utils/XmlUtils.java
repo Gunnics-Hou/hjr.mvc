@@ -69,14 +69,14 @@ public class XmlUtils {
 		return list;
 	}
 
-	public void addElement(Element parent, String eleName, Map<String, String> params) {
+	public static void addElement(Element parent, String eleName, Map<String, Object> map) {
 		if (null == parent || null == eleName) {
 			return;
 		}
 		Element element = parent.addElement(eleName);
-		if (null != params && params.size() > 0) {
-			for (String key : params.keySet()) {
-				element.addAttribute(key, params.get(key));
+		if (null != map && map.size() > 0) {
+			for (String key : map.keySet()) {
+				element.addAttribute(key, map.get(key).toString());
 			}
 		}
 	}
