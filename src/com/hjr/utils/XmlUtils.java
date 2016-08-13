@@ -69,7 +69,8 @@ public class XmlUtils {
 		return list;
 	}
 
-	public static void addElement(Element parent, String eleName, Map<String, Object> map) {
+	public static void addElement(Element parent, String eleName,
+			Map<String, Object> map) {
 		if (null == parent || null == eleName) {
 			return;
 		}
@@ -81,7 +82,7 @@ public class XmlUtils {
 		}
 	}
 
-	public void editElement(Element ele, Map<String, String> params) {
+	public static void editElement(Element ele, Map<String, String> params) {
 		if (null == ele) {
 			return;
 		}
@@ -89,14 +90,15 @@ public class XmlUtils {
 			for (String key : params.keySet()) {
 				Attribute attr;
 				String attrVal;
-				if (null != (attr = ele.attribute(key)) && attr.getValue() != (attrVal = params.get(key))) {
+				if (null != (attr = ele.attribute(key))
+						&& attr.getValue() != (attrVal = params.get(key))) {
 					attr.setValue(attrVal);
 				}
 			}
 		}
 	}
 
-	public void removeElement(Element parent, String condition) {
+	public static void removeElement(Element parent, String condition) {
 		List<?> eles = parent.selectNodes(condition);
 		if (null != eles && eles.size() > 0) {
 			for (Object o : eles) {
@@ -132,4 +134,8 @@ public class XmlUtils {
 		writer.write(document);
 		writer.close();
 	}
+
+	private XmlUtils() {
+		super();
+	};
 }

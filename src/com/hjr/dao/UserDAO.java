@@ -17,7 +17,7 @@ public interface UserDAO {
 	 * @param id
 	 * @return
 	 */
-	public User query(int id);
+	public User queryById(int id);
 
 	/**
 	 *

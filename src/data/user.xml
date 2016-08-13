@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<data>
-	<User id="001" name="admin" password="admin" birthday="2016-07-20" address="" email="11@qq.com" />
-	<User id="002" name="samen" password="123456" birthday="2010-01-29" address="" email="22@qq.com" />
-	<User id="003" name="tom" password="120" birthday="2010-01-19" address="北京" email="33@qq.com" />
-	<User id="004" name="sara" password="3322" birthday="2002-01-19" address="" email="44@qq.com" />
-	<User id="005" name="gunnics" password="w3c000" birthday="2010-01-19" address="" email="55@qq.com" />
-</data>

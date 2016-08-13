@@ -2,17 +2,17 @@ package com.hjr.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import com.hjr.exception.MsgException;
+import com.hjr.exception.DomainValidationException;
 
-public class User implements Serializable {
+public class User extends BaseDomain implements Serializable {
 
 	/**
 	 * 默认serialVersionUID
 	 */
 	private static final long serialVersionUID = 1L;
-
-	private Integer id;
 	private String name;
 	private String password;
 	private Date birthday;
@@ -33,16 +33,17 @@ public class User implements Serializable {
 		this.address = address;
 		this.email = email;
 	}
-	
-	public void validate() throws MsgException {
-		if(null == this.id || "".equals(this.id)) {
-			throw new MsgException("用户id不能为空");
+
+	@Override
+	public void validate() throws DomainValidationException {
+		if (null == this.id) {
+			throw new DomainValidationException("用户id不能为空");
 		}
-		if(null == this.name || "".equals(this.name.trim())) {
-			throw new MsgException("用户名不能为空");
+		if (null == this.name || "".equals(this.name.trim())) {
+			throw new DomainValidationException("用户名不能为空");
 		}
-		if(null == this.password || "".equals(this.password.trim())) {
-			throw new MsgException("用户密码不能为空");
+		if (null == this.password || "".equals(this.password.trim())) {
+			throw new DomainValidationException("用户密码不能为空");
 		}
 	}
 
@@ -53,12 +54,16 @@ public class User implements Serializable {
 				+ ", email=" + email + "]";
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
+	@Override
+	public Map<String, Object> parse2AttrMap() {
+		Map<String, Object> map = new LinkedHashMap<String, Object>(6);
+		map.put("id", this.getId());
+		map.put("name", this.getName());
+		map.put(email, this.getEmail());
+		map.put("passowrd", this.getPassword());
+		map.put("birthday", this.getBirthday());
+		map.put("address", this.getAddress());
+		return map;
 	}
 
 	public String getName() {

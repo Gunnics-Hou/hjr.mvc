@@ -33,19 +33,19 @@ public class UserService {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public User findById(int id) {
-		return dao.query(id);
+		return dao.queryById(id);
 	}
-	
+
 	public void add(User user) throws MsgException {
 		dao.add(user);
 	}
-	
+
 	public void update(User user) throws MsgException {
 		dao.update(user);
 	}
-	
+
 	public void remove(int id) throws MsgException {
 		dao.remove(id);
 	}

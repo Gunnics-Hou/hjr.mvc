@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ReflectionUtils {
@@ -143,8 +144,8 @@ public class ReflectionUtils {
 		return obj;
 	}
 
-	public static Map<String, Object> getBeanAttrPairs(Object bean)
-			throws ReflectiveOperationException {
+	public static Map<String, Object> getBeanAttrPairs(Object bean,
+			List<String> attrNames) throws ReflectiveOperationException {
 		if (null == bean) {
 			return null;
 		}
@@ -152,7 +153,10 @@ public class ReflectionUtils {
 		Field[] attrs = bean.getClass().getDeclaredFields();
 		if (null != attrs && attrs.length > 0) {
 			for (Field f : attrs) {
-				map.put(f.getName(), f.get(bean));
+				f.setAccessible(true);
+				if (attrNames.contains(f.getName())) {
+					map.put(f.getName(), f.get(bean));
+				}
 			}
 		}
 		return map;

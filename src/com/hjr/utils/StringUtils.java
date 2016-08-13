@@ -9,7 +9,8 @@ public class StringUtils {
 	public static String getGetterName(String fieldName) {
 		if (null != fieldName && "" != fieldName.trim()) {
 			StringBuilder getterName = new StringBuilder("get");
-			getterName.append(Character.toUpperCase(fieldName.charAt(0))).append(fieldName.substring(1));
+			getterName.append(Character.toUpperCase(fieldName.charAt(0)))
+					.append(fieldName.substring(1));
 			return getterName.toString();
 		}
 		return null;
@@ -18,27 +19,40 @@ public class StringUtils {
 	public static String getSetterName(String fieldName) {
 		if (null != fieldName && "" != fieldName.trim()) {
 			StringBuilder setterName = new StringBuilder("set");
-			setterName.append(Character.toUpperCase(fieldName.charAt(0))).append(fieldName.substring(1));
+			setterName.append(Character.toUpperCase(fieldName.charAt(0)))
+					.append(fieldName.substring(1));
 			return setterName.toString();
 		}
 		return null;
 	}
 
-	public static Date parseStr2Date(String dateStr, String flag) throws ParseException {
+	public static Date parseStr2Date(String dateStr, String formatter)
+			throws ParseException {
 		if (null == dateStr) {
 			return null;
 		}
-		if (null == flag || "" == flag.trim()) {
-			flag = "-";
+		if (null == formatter) {
+			formatter = "yyyy-MM-dd";
 		}
-		String format = new StringBuilder("yyyy").append(flag).append("MM").append(flag).append("dd").toString();
-		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		SimpleDateFormat sdf = new SimpleDateFormat(formatter);
 		Date date = sdf.parse(dateStr);
 		return date;
 
 	}
 
-	public static Object parseStr2Obj(String content, Class<?> cls) throws ParseException {
+	public static String parseDate2Str(Date date, String formatter) {
+		if (null == date) {
+			return null;
+		}
+		if (null == formatter) {
+			formatter = "yyyy-MM-dd";
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat(formatter);
+		return sdf.format(date);
+	}
+
+	public static Object parseStr2Obj(String content, Class<?> cls,String...params)
+			throws ParseException {
 		if (null == content || null == cls) {
 			return null;
 		}
@@ -49,7 +63,7 @@ public class StringUtils {
 			return Integer.parseInt(content);
 		}
 		if (cls == Date.class) {
-			return parseStr2Date(content,null);
+			return parseStr2Date(content, params[0]);
 		}
 		if (cls == Boolean.class || cls == boolean.class) {
 			return Boolean.parseBoolean(content);
