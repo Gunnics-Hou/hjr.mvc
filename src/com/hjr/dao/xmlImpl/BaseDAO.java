@@ -78,6 +78,16 @@ public class BaseDAO {
 	 */
 	public void add(String beanName, Map<String, Object> params)
 			throws MsgException {
+		if(null == beanName) {
+			throw new MsgException();
+		}
+		Integer id;
+		if(null != (id=(Integer) params.get("id"))) {
+			if(null != doc.selectSingleNode(new StringBuilder("//").append(beanName).append("[@id='")
+					.append(id).append("']").toString())) {
+				throw new MsgException("该ID已被占用，请重试！");
+			}
+		}
 		Element table = getBeanTalble(beanName);
 		if (null == table) {
 			throw new MsgException("");
@@ -99,7 +109,7 @@ public class BaseDAO {
 	 *            需更新的参数集合
 	 * @throws MsgException
 	 */
-	public void update(String beanName, String id, Map<String, Object> params)
+	public void update(String beanName, Integer id, Map<String, Object> params)
 			throws MsgException {
 		if (null == id) {
 			throw new IllegalArgumentException("id字段不存在");
@@ -109,11 +119,7 @@ public class BaseDAO {
 		}
 		Element targetElem = (Element) doc.selectSingleNode(new StringBuilder(
 				"//").append(beanName).append("[@id='").append(id).append("']")
-				.toString());
-
-		if (params.keySet().contains("id")) {
-			params.remove("id");
-		}
+				.toString());	
 		if (null != targetElem && params.size() > 0) {
 			for (String key : params.keySet()) {
 				Attribute attr;
@@ -153,7 +159,7 @@ public class BaseDAO {
 	 * @param id
 	 * @throws MsgException
 	 */
-	public void removeById(String beanName, String id) throws MsgException {
+	public void removeById(String beanName, Integer id) throws MsgException {
 		if (null == id) {
 			throw new IllegalArgumentException("id字段不存在");
 		}
@@ -182,6 +188,14 @@ public class BaseDAO {
 		} catch (Exception e) {
 		}
 		return result;
+	}
+	
+	public Object queryById(String beanName, Integer id){
+		if (null == id) {
+			return null;
+		}
+		return query(new StringBuilder("//").append(beanName).append("[@id='")
+				.append(id).append("']").toString());
 	}
 
 	public List<Object> queryList(String condition) {
