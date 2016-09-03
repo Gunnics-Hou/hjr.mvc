@@ -3,6 +3,7 @@ package com.hjr.utilsTest;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.hjr.utils.StringUtils;
@@ -26,5 +27,13 @@ public class StringUtilsTest {
 		String s2 = StringUtils.parseDate2Str(new Date(), "yyyy:dd:MM");
 		System.out.println(s2);
 	}
-	
+
+	@Test
+	public void testParseStr2Obj() {
+		try {
+			Assert.assertEquals(100,StringUtils.parseStr2Obj("100", Integer.class, null));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
 }

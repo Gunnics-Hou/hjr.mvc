@@ -33,8 +33,7 @@ public class BaseDAO {
 	static {
 		Properties proper = null;
 		try {
-			proper = PropertiesUtils.load(BaseDAO.class
-					.getResourceAsStream(PROPERTIES_PATH));
+			proper = PropertiesUtils.load(BaseDAO.class.getResourceAsStream(PROPERTIES_PATH));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -76,19 +75,18 @@ public class BaseDAO {
 	 *            属性集
 	 * @throws MsgException
 	 */
-	public void add(String beanName, Map<String, Object> params)
-			throws MsgException {
-		if(null == beanName) {
+	public void add(String beanName, Map<String, Object> params) throws MsgException {
+		if (null == beanName) {
 			throw new MsgException();
 		}
 		Integer id;
-		if(null != (id=(Integer) params.get("id"))) {
-			if(null != doc.selectSingleNode(new StringBuilder("//").append(beanName).append("[@id='")
-					.append(id).append("']").toString())) {
+		if (null != (id = (Integer) params.get("id"))) {
+			if (null != doc.selectSingleNode(
+					new StringBuilder("//").append(beanName).append("[@id='").append(id).append("']").toString())) {
 				throw new MsgException("该ID已被占用，请重试！");
 			}
 		}
-		Element table = getBeanTalble(beanName);
+		Element table = getBeanTable(beanName);
 		if (null == table) {
 			throw new MsgException("");
 		}
@@ -109,23 +107,20 @@ public class BaseDAO {
 	 *            需更新的参数集合
 	 * @throws MsgException
 	 */
-	public void update(String beanName, Integer id, Map<String, Object> params)
-			throws MsgException {
+	public void update(String beanName, Integer id, Map<String, Object> params) throws MsgException {
 		if (null == id) {
 			throw new IllegalArgumentException("id字段不存在");
 		}
 		if (null == params || params.size() == 0) {
 			throw new IllegalArgumentException("无更新项目");
 		}
-		Element targetElem = (Element) doc.selectSingleNode(new StringBuilder(
-				"//").append(beanName).append("[@id='").append(id).append("']")
-				.toString());	
+		Element targetElem = (Element) doc.selectSingleNode(
+				new StringBuilder("//").append(beanName).append("[@id='").append(id).append("']").toString());
 		if (null != targetElem && params.size() > 0) {
 			for (String key : params.keySet()) {
 				Attribute attr;
 				String attrVal = parse2String(params.get(key));
-				if (null == (attr = targetElem.attribute(key))
-						|| attr.getValue().equals(attrVal)) {
+				if (null == (attr = targetElem.attribute(key)) || attr.getValue().equals(attrVal)) {
 					continue;
 				}
 				attr.setValue(attrVal);
@@ -146,7 +141,7 @@ public class BaseDAO {
 		if (null != elems && elems.size() > 0) {
 			for (Object ele : elems) {
 				if (ele instanceof Element)
-					doc.remove((Element) ele);
+					((Element) ele).getParent().remove((Element) ele);
 			}
 		}
 		save();
@@ -163,8 +158,7 @@ public class BaseDAO {
 		if (null == id) {
 			throw new IllegalArgumentException("id字段不存在");
 		}
-		remove(new StringBuilder("//").append(beanName).append("[@id='")
-				.append(id).append("']").toString());
+		remove(new StringBuilder("//").append(beanName).append("[@id='").append(id).append("']").toString());
 	}
 
 	/**
@@ -186,16 +180,16 @@ public class BaseDAO {
 		try {
 			result = parse2Bean(ele);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return result;
 	}
-	
-	public Object queryById(String beanName, Integer id){
+
+	public Object queryById(String beanName, Integer id) {
 		if (null == id) {
 			return null;
 		}
-		return query(new StringBuilder("//").append(beanName).append("[@id='")
-				.append(id).append("']").toString());
+		return query(new StringBuilder("//").append(beanName).append("[@id='").append(id).append("']").toString());
 	}
 
 	public List<Object> queryList(String condition) {
@@ -219,11 +213,10 @@ public class BaseDAO {
 	 * @param beanName
 	 * @return
 	 */
-	private Element getBeanTalble(String beanName) {
+	private Element getBeanTable(String beanName) {
 		Element tableElem = null;
 		if (null != beanName && !"".equals(beanName.trim())) {
-			tableElem = (Element) getRoot().selectSingleNode(
-					beanName + "-table[1]");
+			tableElem = (Element) getRoot().selectSingleNode(beanName + "-table[1]");
 		}
 		return tableElem;
 	}
@@ -243,29 +236,26 @@ public class BaseDAO {
 	 * @throws Exception
 	 */
 	private Object parse2Bean(Element ele) throws Exception {
+		Properties params = new Properties();
 		if (null == ele) {
 			return null;
 		}
 		Object bean = null;
 		String nodeName = ele.getName();
-		String className = new StringBuilder(DOMAIN_PACKEGE).append('.')
-				.append(nodeName).toString();
+		String className = new StringBuilder(DOMAIN_PACKEGE).append('.').append(nodeName).toString();
 		Class<?> cls = Class.forName(className);
 		if (null != cls) {
 			bean = cls.newInstance();
-			Map<String, Class<?>> fieldTypes = ReflectionUtils
-					.fieldTypesMap(cls);
+			Map<String, Class<?>> fieldTypes = ReflectionUtils.fieldTypesMap(cls);
 			if (fieldTypes.size() == 0) {
 				return bean;
 			}
 			for (String f : fieldTypes.keySet()) {
 				Class<?> type = fieldTypes.get(f);
 				String setterName = StringUtils.getSetterName(f);
-				Method method = ReflectionUtils
-						.getMethod(cls, setterName, type);
+				Method method = ReflectionUtils.getMethod(cls, setterName, type);
 				if (null != method) {
-					method.invoke(bean, StringUtils.parseStr2Obj(
-							ele.attributeValue(f), fieldTypes.get(f)));
+					method.invoke(bean, StringUtils.parseStr2Obj(ele.attributeValue(f), fieldTypes.get(f),params));
 				}
 			}
 		}

@@ -3,6 +3,7 @@ package com.hjr.utils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 
 public class StringUtils {
 
@@ -26,12 +27,15 @@ public class StringUtils {
 		return null;
 	}
 
-	public static Date parseStr2Date(String dateStr, String formatter)
+	public static Date parseStr2Date(String dateStr, Properties params)
 			throws ParseException {
 		if (null == dateStr) {
 			return null;
 		}
-		if (null == formatter) {
+		String formatter = null;
+		if (null != params && params.size() > 0) {
+			params.getProperty(formatter, "yyyy-MM-dd");
+		} else {
 			formatter = "yyyy-MM-dd";
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat(formatter);
@@ -51,7 +55,7 @@ public class StringUtils {
 		return sdf.format(date);
 	}
 
-	public static Object parseStr2Obj(String content, Class<?> cls,String...params)
+	public static Object parseStr2Obj(String content, Class<?> cls,Properties params)
 			throws ParseException {
 		if (null == content || null == cls) {
 			return null;
@@ -63,7 +67,7 @@ public class StringUtils {
 			return Integer.parseInt(content);
 		}
 		if (cls == Date.class) {
-			return parseStr2Date(content, params[0]);
+			return parseStr2Date(content, params);
 		}
 		if (cls == Boolean.class || cls == boolean.class) {
 			return Boolean.parseBoolean(content);

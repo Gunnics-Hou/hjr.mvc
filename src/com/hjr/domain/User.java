@@ -18,6 +18,15 @@ public class User extends BaseDomain implements Serializable {
 	private Date birthday;
 	private String address;
 	private String email;
+	private Integer id;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public User() {
 		super();
@@ -59,8 +68,8 @@ public class User extends BaseDomain implements Serializable {
 		Map<String, Object> map = new LinkedHashMap<String, Object>(6);
 		map.put("id", this.getId());
 		map.put("name", this.getName());
-		map.put(email, this.getEmail());
-		map.put("passowrd", this.getPassword());
+		map.put("email", this.getEmail());
+		map.put("password", this.getPassword());
 		map.put("birthday", this.getBirthday());
 		map.put("address", this.getAddress());
 		return map;
